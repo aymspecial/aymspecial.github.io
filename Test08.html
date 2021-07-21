@@ -1,0 +1,367 @@
+<head>
+	<meta charset="utf-8" />
+	<title>Real-Time 3D Graphics with WebGL 2</title>
+
+	<!-- type="module" を付けないと ファイル中の"import"文で落ちる -->
+	<script type="module" src="/lib/three.js/build/three.js"></script>
+
+	<!-- jsm ではなく js を用いないと実行エラーになる -->
+	<script type="module" src="/lib/three.js/examples/js/loaders/GLTFLoader.js"></script>
+	<script type="module" src="/lib/three.js/examples/js/controls/TrackballControls.js"></script>
+	<script type="text/javascript" src="/lib/dat.gui/dat.gui.js"></script>
+	<script type="module" src="/lib/three.js/examples/js/effects/OutlineEffect.js"></script>
+
+	<style type="text/css">
+		canvas {
+		}
+	</style>
+</head>
+<html>
+<body>
+	<div id="webgl-div"></div>
+</body>
+</html>
+<script>
+	// global variables
+	var renderer;
+	var scene;
+	var camera;
+	var camControl;
+	var mixer;
+	var clock;
+	var container;
+	var obj;
+	var gui;
+	var partsArray = new Array();
+	var effect;
+	var action;
+	var animations;
+
+	class PosTo
+	{
+		constructor()
+		{
+			this.position = new THREE.Vector3( 0, 0, 0 );
+			this.lookAt = new THREE.Vector3( 0, 0, 0 );
+		}
+	}
+
+	function init()
+	{
+		scene = new THREE.Scene();
+		clock = new THREE.Clock();
+
+		// create a render, sets the background color and the size
+		renderer = new THREE.WebGLRenderer( { antialias: true } );
+		renderer.setClearColor( 0xeeeeee, 1.0 );
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		renderer.shadowMapEnabled = true;
+
+		// Renderer と Div の関連付け
+		container = document.getElementById( 'webgl-div' );
+		container.appendChild( renderer.domElement );
+
+		effect = new THREE.OutlineEffect( renderer );
+		effect.enabled = true;
+
+		// view の定義
+		const views = [ 'View00', 'View01', 'View02', 'View03' ];
+		var viewArray = new Array();
+		viewArray[ 0 ] = new PosTo();
+		viewArray[ 1 ] = new PosTo();
+		viewArray[ 2 ] = new PosTo();
+		viewArray[ 0 ].position = new THREE.Vector3( 20, 5, 13 );
+		viewArray[ 0 ].lookAt = new THREE.Vector3( 0, 0, 0 );
+		viewArray[ 1 ].position = new THREE.Vector3( 0.355, 0.395, 2.153 );
+		viewArray[ 1 ].lookAt = new THREE.Vector3( -0.4449, 0.403, 0.009 );
+		viewArray[ 2 ].position = new THREE.Vector3( -1.637, 1.560, 0.776 );
+		viewArray[ 2 ].lookAt = new THREE.Vector3( -0.313, 0.774, -0.093 );
+
+		// create a camera, which defines where we're looking at.
+		camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 1000 );
+		camera.position.x = viewArray[ 0 ].position.x;
+		camera.position.y = viewArray[ 0 ].position.y;
+		camera.position.z = viewArray[ 0 ].position.z;
+
+		camera.lookAt( scene.position );
+
+		// Camera Mouse Control
+		camControl = new THREE.TrackballControls( camera, renderer.domElement );
+		camControl.rotateSpeed = 4;
+
+		// 読み込んだシーンが暗いので明るくする
+		renderer.outputEncoding = THREE.GammaEncoding;
+
+		// create the ground plane
+		var planeGeometry = new THREE.PlaneGeometry( 60, 40, 18, 12 );
+
+		var material1 = new THREE.MeshLambertMaterial( { color: 0xffffdd } );
+		var material2 = new THREE.MeshBasicMaterial( { color: 0x333333, wireframe: true } );
+		var groundPlane1 = new THREE.Mesh( planeGeometry, material1 );
+		var groundPlane2 = new THREE.Mesh( planeGeometry, material2 );
+		groundPlane1.name = 'ground';
+		groundPlane2.name = 'groundLine';
+		groundPlane1.receiveShadow = true;
+
+		// rotate and position the plane
+		groundPlane1.rotation.x = -0.5 * Math.PI;
+		groundPlane1.position.x = 0;
+		groundPlane1.position.y = 0;
+		groundPlane1.position.z = 0;
+		groundPlane2.rotation.x = -0.5 * Math.PI;
+		groundPlane2.position.x = 0;
+		groundPlane2.position.y = 0;
+		groundPlane2.position.z = 0;
+
+		// add the plane to the scene
+		scene.add( groundPlane1 );
+		scene.add( groundPlane2 );
+
+		// add subtle ambient lighting
+		var ambientLight = new THREE.AmbientLight( 0x0c0c0c );
+		scene.add( ambientLight );
+
+		// 並行光源の追加
+		const dirLight1 = new THREE.DirectionalLight( 0x888888 );
+		dirLight1.position.set( 20, 20, 25 );
+		dirLight1.castShadow = true;
+		dirLight1.shadow.camera.top = 50;
+		dirLight1.shadow.camera.bottom = -25;
+		dirLight1.shadow.camera.left = -25;
+		dirLight1.shadow.camera.right = 25;
+		dirLight1.shadow.camera.near = 0.1;
+		dirLight1.shadow.camera.far = 200;
+		dirLight1.shadow.mapSize.set( 2048, 2048 );
+		scene.add( dirLight1 );
+
+		const dirLight2 = new THREE.DirectionalLight( 0x888888 );
+		dirLight2.position.set( -20, 20, 25 );
+		dirLight2.shadow.camera.top = 50;
+		dirLight2.shadow.camera.bottom = -25;
+		dirLight2.shadow.camera.left = -25;
+		dirLight2.shadow.camera.right = 25;
+		dirLight2.shadow.camera.near = 0.1;
+		dirLight2.shadow.camera.far = 200;
+		scene.add( dirLight2 );
+
+		// add the output of the renderer to the html element
+		document.getElementById( "webgl-div" ).appendChild( renderer.domElement )
+
+		// gltf ファイルの読み込み
+		var loader = new THREE.GLTFLoader();
+		loader.load( 'assets/B-1B_11.glb', function ( data )
+		{
+			const gltf = data;
+			obj = gltf.scene;
+			animations = gltf.animations;
+
+			// アニメーションスタート
+			controls.Restart();
+
+			// 影を持つ
+			obj.traverse( function ( child ) { child.castShadow = true; } );
+
+			scene.add( obj );
+
+			// Add Cube
+			var cubeSize = Math.ceil( ( Math.random() * 3 ) );
+			var cubeGeometry = new THREE.BoxGeometry( cubeSize, cubeSize, cubeSize );
+			var cubeMaterial = new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } );
+			var cube = new THREE.Mesh( cubeGeometry, cubeMaterial );
+			cube.castShadow = true;
+			cube.name = "cube-" + scene.children.length;
+
+			// position the cube randomly in the scene
+			cube.position.x = -15;
+			cube.position.y = 2;
+			cube.position.z = -1;
+
+			// add the cube to the scene
+			scene.add( cube );
+
+			// children の名前で変数を追加し、checkbox で登録する
+			for ( let i = 0; i < obj.children.length; i++ )
+			{
+				partsArray.push( obj.children[ i ].name );
+			}
+
+			window.addEventListener( 'resize', onWindowResize );
+		} );
+
+		var controls = new function ()
+		{
+			this.AnimationSpeed = 1.0;
+			this.NumberOfObjects = scene.children.length;
+			this.OutLine = true;
+			this.CastShadow = true;
+			this.GroundPlane = true;
+			this.GearCover = true;
+			this.Body = true;
+
+			this.View = 'View00';
+
+			this.RemoveCube = function ()
+			{
+				var allChildren = scene.children;
+				var lastObject = allChildren[ allChildren.length - 1 ];
+				if ( lastObject instanceof THREE.Mesh )
+				{
+					scene.remove( lastObject );
+					this.NumberOfObjects = scene.children.length;
+				}
+			};
+
+			this.AddCube = function ()
+			{
+				var cubeSize = Math.ceil( ( Math.random() * 3 ) );
+				var cubeGeometry = new THREE.BoxGeometry( cubeSize, cubeSize, cubeSize );
+				var cubeMaterial = new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } );
+				var cube = new THREE.Mesh( cubeGeometry, cubeMaterial );
+				cube.castShadow = true;
+				cube.name = "cube-" + scene.children.length;
+
+				// position the cube randomly in the scene
+				cube.position.x = -30 + Math.round( ( Math.random() * planeGeometry.parameters.width ) );
+				cube.position.y = Math.round( ( Math.random() * 5 ) );
+				cube.position.z = -20 + Math.round( ( Math.random() * planeGeometry.parameters.height ) );
+
+				// add the cube to the scene
+				scene.add( cube );
+				this.NumberOfObjects = scene.children.length;
+			};
+
+			this.ViewPosition = function ()
+			{
+				alert( 'CamPosition x:' + camera.position.x.toFixed( 3 )
+					+ ' y: ' + camera.position.y.toFixed( 3 )
+					+ ' z: ' + camera.position.z.toFixed( 3 ) + '\r\n'
+					+ 'Lookat x: ' + camControl.target.x.toFixed( 3 )
+					+ ' y: ' + camControl.target.y.toFixed( 3 )
+					+ ' z: ' + camControl.target.z.toFixed( 3 ) );
+
+			};
+
+			this.Restart = function ()
+			{
+				if ( animations && animations.length )
+				{
+					// Animation Mixerインスタンスを生成
+					mixer = new THREE.AnimationMixer( obj );
+
+					// 全ての Animation Clip に対して
+					for ( let i = 0; i < animations.length; i++ )
+					{
+						let animation = animations[ i ];
+
+						// Animation Actionを生成
+						action = mixer.clipAction( animation );
+
+						// ループ設定（1回のみ）
+						action.setLoop( THREE.LoopOnce );
+
+						// アニメーションの最後のフレームでアニメーションが終了
+						action.clampWhenFinished = true;
+
+						// アニメーションを再生
+						action.play();
+					}
+				}
+			};
+		};
+
+		gui = new dat.GUI();
+		gui.add( controls, 'AnimationSpeed', 0.1, 10.0 );
+		// states
+		const viewCtrl = gui.add( controls, 'View' ).options( views );
+		gui.add( controls, 'ViewPosition' );
+		gui.add( controls, 'Restart' );
+		gui.add( controls, 'OutLine' ).onChange( setOutLine );
+		gui.add( controls, 'CastShadow' ).onChange( setCastShadow );
+		gui.add( controls, 'GroundPlane' ).onChange( setGroundPlane );
+
+		gui.add( controls, 'AddCube' );
+		gui.add( controls, 'RemoveCube' );
+		gui.add( controls, 'NumberOfObjects' ).listen();
+
+		// Objects
+		var objectFolder = gui.addFolder( 'Objects' )
+		objectFolder.add( controls, 'Body' ).onChange( setVisible );
+		objectFolder.add( controls, 'GearCover' ).onChange( setVisible );
+		objectFolder.open();
+
+		this.NumberOfObjects = scene.children.length;
+
+		viewCtrl.onChange( function ()
+		{
+			var idx = views.indexOf( controls.View );
+			camControl.up0.set( 0, 1, 0 ); // set a new up vector
+			camControl.reset();
+			camControl.object.position.set( viewArray[ idx ].position.x,
+				viewArray[ idx ].position.y,
+				viewArray[ idx ].position.z );
+			camControl.target = new THREE.Vector3( viewArray[ idx ].lookAt.x,
+				viewArray[ idx ].lookAt.y, viewArray[ idx ].lookAt.z );
+		} );
+
+		// checkbox が押されたときの obj 更新
+		function setVisible()
+		{
+			for ( let i = 0; i < partsArray.length; i++ )
+			{
+				eval( "bVisible = controls." + partsArray[ i ] + ";" );
+				for ( let j = 0; j < obj.children.length; j++ )
+				{
+					if ( obj.children[ j ].name == partsArray[ i ] )
+					{
+						obj.children[ j ].visible = bVisible;
+					}
+				}
+			}
+		}
+
+		function setCastShadow()
+		{
+			obj.traverse( function ( child ) { child.castShadow = controls.CastShadow; } );
+		}
+
+		function setGroundPlane()
+		{
+			var child = scene.children.find( ( v ) => v.name == 'ground' );
+			child.visible = controls.GroundPlane;
+			var child = scene.children.find( ( v ) => v.name == 'groundLine' );
+			child.visible = controls.GroundPlane;
+		}
+
+		function setOutLine()
+		{
+			effect.enabled = controls.OutLine;
+		}
+
+		function onWindowResize()
+		{
+			camera.aspect = window.innerWidth / window.innerHeight;
+			camera.updateProjectionMatrix();
+
+			effect.setSize( window.innerWidth, window.innerHeight );
+		}
+
+		render();
+	}
+
+
+	function render()
+	{
+		effect.render( scene, camera );
+
+		camControl.update();
+		requestAnimationFrame( render );
+
+		// Animation Mixerを実行
+		if ( mixer )
+		{
+			mixer.update( clock.getDelta() );
+		}
+	}
+
+	window.onload = init;
+</script>
