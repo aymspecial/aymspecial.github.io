@@ -163,7 +163,7 @@ ul li:hover a {
 /* Parallax Section */
 .banner {
 	background-color: #B152D5;
-	background-image: url(../image/icosahedron.png);
+	background-image: url(/image/icosahedron.png);
 	height: 400px;
 	background-attachment: fixed;
 	background-size: cover;
