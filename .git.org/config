@@ -1,0 +1,14 @@
+[core]
+	repositoryformatversion = 0
+	filemode = false
+	bare = false
+	logallrefupdates = true
+	symlinks = false
+	ignorecase = true
+[remote "main"]
+	url = https://github.com/aymspecial/aymspecial.github.io.git
+	fetch = +refs/heads/*:refs/remotes/main/*
+	pushurl = https://github.com/aymspecial/aymspecial.github.io.git
+[branch "master"]
+	remote = main
+	merge = refs/heads/master
