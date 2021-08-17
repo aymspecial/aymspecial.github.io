@@ -149,6 +149,13 @@
 		dirLight2.shadow.camera.far = 200;
 		scene.add( dirLight2 );
 
+		// バックグラウンド・環境マッピング
+		var envMap = new THREE.CubeTextureLoader()
+			.setPath( 'EnvMapTest/Standard-Cube-Map/' )
+			.load( [ 'px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png' ] );
+		scene.background = envMap;
+		scene.environment = envMap;
+
 		// gltf ファイルの読み込み
 		var loader = new THREE.GLTFLoader();
 		loader.load( 'assets/B747_00.glb', function ( data )
