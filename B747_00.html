@@ -116,10 +116,13 @@
 		groundPlane1.position.x = 0;
 		groundPlane1.position.y = 0;
 		groundPlane1.position.z = 0;
-		groundPlane2.rotation.x = -0.5 * Math.PI;
-		groundPlane2.position.x = 0;
-		groundPlane2.position.y = 0;
-		groundPlane2.position.z = 0;
+
+		groundPlane2.rotation.x = groundPlane1.rotation.x;
+		groundPlane2.position = groundPlane1.position;
+
+		groundPlane1.visible = false;
+		groundPlane2.visible = false;
+
 
 		// add the plane to the scene
 		scene.add( groundPlane1 );
@@ -206,7 +209,7 @@
 			this.NumberOfObjects = scene.children.length;
 			this.OutLine = true;
 			this.CastShadow = true;
-			this.GroundPlane = true;
+			this.GroundPlane = false;
 			this.GearCover = true;
 			this.Body = true;
 			this.AnimTime = 0.0;
