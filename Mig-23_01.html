@@ -18,19 +18,13 @@
 			<table valign="center">
 				<tr>
 					<td>Animation01</td>
-					<td><img src="image/BackButton.png" width=32 height=32 onclick="" /></td>
+					<td><img src="image/BackButton.png" width=32 height=32 onclick="onReverse()" /></td>
 					<td>
 						<input id="slide01" type="range" class='slide' min="0" max="300" step="1" value="0" oninput="showVal( this.value
 )">
-					<td><img src="image/PlayButton.png" width=32 height=32 onclick="" /></td>
+					<td><img src="image/PlayButton.png" width=32 height=32 onclick="onPlay()" /></td>
 				</tr>
 				<tr>
-					<td>Animation02</td>
-					<td><img src="image/BackButton.png" width=32 height=32 onclick="" /></td>
-					<td>
-						<input id="slide02" type="range" class='slide' min="0" max="300" step="1" value="0"
-							oninput="showVal( this.value )">
-					<td><img src="image/PlayButton.png" width=32 height=32 onclick="" /></td>
 				</tr>
 			</table>
 		</center>
@@ -39,6 +33,8 @@
 </body>
 </html>
 <script>
+	// Magic Variables
+	const glbFile = 'assets/Mig-23_00.glb';
 	// global variables
 	var renderer;
 	var scene;
@@ -93,16 +89,16 @@
 		viewArray[ 1 ] = new PosTo();
 		viewArray[ 2 ] = new PosTo();
 		viewArray[ 3 ] = new PosTo();
-		
+
 		viewArray[ 0 ].position = new THREE.Vector3( 20.913, 7.371, 11.696 );
 		viewArray[ 0 ].lookAt = new THREE.Vector3( 2.9, 3.6, -0.893 );
-		
+
 		viewArray[ 1 ].position = new THREE.Vector3( 4.69, 1.07, -0.89 );
 		viewArray[ 1 ].lookAt = new THREE.Vector3( 1.209, 1.391, -5.776 );
-		
+
 		viewArray[ 2 ].position = new THREE.Vector3( 3.727, 2.7, -9.561 );
 		viewArray[ 2 ].lookAt = new THREE.Vector3( 0.161, 1.385, -4.9 );
-		
+
 		viewArray[ 3 ].position = new THREE.Vector3( -1.637, 1.560, 0.776 );
 		viewArray[ 3 ].lookAt = new THREE.Vector3( -0.313, 0.774, -0.093 );
 
@@ -165,6 +161,7 @@
 
 		// add the cube to the scene
 		scene.add( cube );
+
 		// 並行光源の追加
 		const dirLight1 = new THREE.DirectionalLight( 0x888888 );
 		dirLight1.position.set( 20, 20, 25 );
@@ -190,7 +187,7 @@
 
 		// gltf ファイルの読み込み
 		var loader = new THREE.GLTFLoader();
-		loader.load( 'assets/Mig-23_00.glb', function ( data )
+		loader.load( glbFile, function ( data )
 		{
 			const gltf = data;
 			obj = gltf.scene;
@@ -218,14 +215,13 @@
 
 		controls = new function ()
 		{
-			this.AnimationSpeed = 1.0;
 			this.NumberOfObjects = scene.children.length;
 			this.OutLine = true;
 			this.CastShadow = true;
 			this.GroundPlane = true;
 			this.GearCover = true;
 			this.Body = true;
-			this.AnimTime = 0.0;
+			this.AnimationFrame = 0.0;
 
 			this.View = 'View00';
 
@@ -298,7 +294,6 @@
 		};
 
 		gui = new dat.GUI();
-		gui.add( controls, 'AnimationSpeed', 0.1, 10.0 );
 		// states
 		const viewCtrl = gui.add( controls, 'View' ).options( views );
 		gui.add( controls, 'ViewPosition' );
@@ -310,7 +305,7 @@
 		gui.add( controls, 'AddCube' );
 		gui.add( controls, 'RemoveCube' );
 		gui.add( controls, 'NumberOfObjects' ).listen();
-		gui.add( controls, 'AnimTime' ).listen();
+		gui.add( controls, 'AnimationFrame' ).listen();
 
 		// Objects
 		var objectFolder = gui.addFolder( 'Objects' )
@@ -401,7 +396,7 @@
 
 	function showVal( val )
 	{
-		controls.AnimTime = val;
+		controls.AnimationFrame = val;
 
 		// 全ての Animation Clip に対して slider の値を更新
 		for ( let i = 0; i < mixer._actions.length; i++ )
@@ -409,6 +404,26 @@
 			var action = mixer._actions[ i ];
 			action.paused = true;
 			action.time = val / 30;
+		}
+	}
+
+	function onPlay()
+	{
+		for ( let i = 0; i < mixer._actions.length; i++ )
+		{
+			var action = mixer._actions[ i ];
+			action.paused = false;
+			action.timeScale = 1;
+		}
+	}
+
+	function onReverse()
+	{
+		for ( let i = 0; i < mixer._actions.length; i++ )
+		{
+			var action = mixer._actions[ i ];
+			action.paused = false;
+			action.timeScale = -1;
 		}
 	}
 
