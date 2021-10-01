@@ -10,6 +10,30 @@ body {
 	font-style: normal;
 	font-weight: 200;
 }
+
+a {
+	text-decoration: none;
+}
+/*アクセスしたことのないリンク*/
+a:link {
+	color:#FFFFFF;
+}
+
+/*アクセスしたことのあるリンク*/
+a:visited {
+	color:#FFFFFF;
+}
+
+/*マウスが上に乗っている状態*/
+a:hover {
+	color:#0000FF;
+}
+
+/*クリック中*/
+a:active {
+	color:#33CC00;	←緑色
+}
+
 /* Container */
 .container {
 	width: 90%;
@@ -75,6 +99,7 @@ nav ul li {
 ul li {
     color: #515151;
 }
+/*
 ul li a {
 	color: #FFFFFF;
 	text-decoration: none;
@@ -83,6 +108,8 @@ ul li a {
 ul li:hover a {
 	color: #B152D5;
 }
+*/
+
 .hero_header {
     color: #FFFFFF;
     text-align: center;
@@ -274,20 +301,17 @@ footer .footer_column p {
 footer {
 	display: inline-block;
 }
+
 .hidden {
 	display: none;
 }
-a {
-    text-decoration: none;
-}
+
 tbody tr .WebGLTestDir {
     font-size: 17px;
     font-weight: bold;
     
 	
 }
-
-
 
 /* Mobile */
 @media (max-width: 320px) {
