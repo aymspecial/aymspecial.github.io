@@ -15,11 +15,9 @@ body {
 }
 
 #inner {
-    width: 30%;
-    height:20%;
     color: #910000;
     position: absolute;
-    bottom: 160px;
+    bottom: 0px;
     z-index: 100;
 }
 
