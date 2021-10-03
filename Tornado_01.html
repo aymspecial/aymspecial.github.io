@@ -13,77 +13,90 @@
 <html>
 <body>
 	<div id="webgl-div">
-	<div id="inner">
-		<center>
-			<table valign="center" width=20%>
-				<tr>
-					<td id="animName00">Animation00</td>
-					<td><img src="image/BackButton.png" width=24 height=24 onclick="onReverse( 0 )" /></td>
-					<td><input id="slide00" type="range" class='slide' min="0" max="300" step="1" value="0"
-							oninput="onSlider( 0, this.value )">
-					<td><img src="image/PlayButton.png" width=24 height=24 onclick="onPlay( 0 )" /></td>
-				</tr>
-				<tr>
-					<td id="animName01">Animation01</td>
-					<td><img src="image/BackButton.png" width=24 height=24 onclick="onReverse( 1 )" /></td>
-					<td><input id="slide01" type="range" class='slide' min="0" max="300" step="1" value="0"
-							oninput="onSlider( 1, this.value )">
-					<td><img src="image/PlayButton.png" width=24 height=24 onclick="onPlay( 1 )" /></td>
-				</tr>
-				<tr>
-					<td id="animName02">Animation02</td>
-					<td><img src="image/BackButton.png" width=24 height=24 onclick="onReverse( 2 )" /></td>
-					<td><input id="slide02" type="range" class='slide' min="0" max="300" step="1" value="0"
-							oninput="onSlider( 2, this.value )">
-					<td><img src="image/PlayButton.png" width=24 height=24 onclick="onPlay( 2 )" /></td>
-				</tr>
+		<div id="progressDiv">
+			Loading...<br />
+			<progress id="loadProgress" max="100" value="0"> 0% </progress>
+		</div>
+		<div id="inner">
+			<center>
+				<table valign="center" width=20%>
+					<tr>
+						<td id="animName00">Animation00</td>
+						<td><img src="image/BackButton.png" width=24 height=24 onclick="onReverse( 0 )" /></td>
+						<td>
+							<input id="slide00" type="range" class='slide' min="0" max="300" step="1" value="0"
+								   oninput="onSlider( 0, this.value )">
+						<td><img src="image/PlayButton.png" width=24 height=24 onclick="onPlay( 0 )" /></td>
+					</tr>
+					<tr>
+						<td id="animName01">Animation01</td>
+						<td><img src="image/BackButton.png" width=24 height=24 onclick="onReverse( 1 )" /></td>
+						<td>
+							<input id="slide01" type="range" class='slide' min="0" max="300" step="1" value="0"
+								   oninput="onSlider( 1, this.value )">
+						<td><img src="image/PlayButton.png" width=24 height=24 onclick="onPlay( 1 )" /></td>
+					</tr>
+					<tr>
+						<td id="animName02">Animation02</td>
+						<td><img src="image/BackButton.png" width=24 height=24 onclick="onReverse( 2 )" /></td>
+						<td>
+							<input id="slide02" type="range" class='slide' min="0" max="300" step="1" value="0"
+								   oninput="onSlider( 2, this.value )">
+						<td><img src="image/PlayButton.png" width=24 height=24 onclick="onPlay( 2 )" /></td>
+					</tr>
 
-				<tr>
-					<td id="animName03">Animation03</td>
-					<td><img src="image/BackButton.png" width=24 height=24 onclick="onReverse( 3 )" /></td>
-					<td><input id="slide03" type="range" class='slide' min="0" max="300" step="1" value="0"
-							oninput="onSlider( 3, this.value )">
-					<td><img src="image/PlayButton.png" width=24 height=24 onclick="onPlay( 3 )" /></td>
-				</tr>
-				<tr>
-					<td id="animName04">Animation04</td>
-					<td><img src="image/BackButton.png" width=24 height=24 onclick="onReverse( 4 )" /></td>
-					<td><input id="slide04" type="range" class='slide' min="0" max="300" step="1" value="0"
-							oninput="onSlider( 4, this.value )">
-					<td><img src="image/PlayButton.png" width=24 height=24 onclick="onPlay( 4 )" /></td>
-				</tr>
-				<tr>
-					<td id="animName05">Animation05</td>
-					<td><img src="image/BackButton.png" width=24 height=24 onclick="onReverse( 5 )" /></td>
-					<td><input id="slide05" type="range" class='slide' min="0" max="300" step="1" value="0"
-							oninput="onSlider( 5, this.value )">
-					<td><img src="image/PlayButton.png" width=24 height=24 onclick="onPlay( 5 )" /></td>
-				</tr>
-				<tr>
-					<td id="animName06">Animation06</td>
-					<td><img src="image/BackButton.png" width=24 height=24 onclick="onReverse( 6 )" /></td>
-					<td><input id="slide06" type="range" class='slide' min="0" max="300" step="1" value="0"
-							oninput="onSlider( 6, this.value )">
-					<td><img src="image/PlayButton.png" width=24 height=24 onclick="onPlay( 6 )" /></td>
-				</tr>
-				<tr>
-					<td id="animName07">Animation07</td>
-					<td><img src="image/BackButton.png" width=24 height=24 onclick="onReverse( 7 )" /></td>
-					<td><input id="slide07" type="range" class='slide' min="0" max="300" step="1" value="0"
-							oninput="onSlider( 7, this.value )">
-					<td><img src="image/PlayButton.png" width=24 height=24 onclick="onPlay( 7 )" /></td>
-				</tr>
-				<tr>
-					<td id="animName08">Animation08</td>
-					<td><img src="image/BackButton.png" width=24 height=24 onclick="onReverse( 8 )" /></td>
-					<td><input id="slide08" type="range" class='slide' min="0" max="300" step="1" value="0"
-							oninput="onSlider( 8, this.value )">
-					<td><img src="image/PlayButton.png" width=24 height=24 onclick="onPlay( 8 )" /></td>
-				</tr>
-			</table>
-		</center>
-		<p>Drag Sliders to Change Frame of Animations</p>
-	</div>
+					<tr>
+						<td id="animName03">Animation03</td>
+						<td><img src="image/BackButton.png" width=24 height=24 onclick="onReverse( 3 )" /></td>
+						<td>
+							<input id="slide03" type="range" class='slide' min="0" max="300" step="1" value="0"
+								   oninput="onSlider( 3, this.value )">
+						<td><img src="image/PlayButton.png" width=24 height=24 onclick="onPlay( 3 )" /></td>
+					</tr>
+					<tr>
+						<td id="animName04">Animation04</td>
+						<td><img src="image/BackButton.png" width=24 height=24 onclick="onReverse( 4 )" /></td>
+						<td>
+							<input id="slide04" type="range" class='slide' min="0" max="300" step="1" value="0"
+								   oninput="onSlider( 4, this.value )">
+						<td><img src="image/PlayButton.png" width=24 height=24 onclick="onPlay( 4 )" /></td>
+					</tr>
+					<tr>
+						<td id="animName05">Animation05</td>
+						<td><img src="image/BackButton.png" width=24 height=24 onclick="onReverse( 5 )" /></td>
+						<td>
+							<input id="slide05" type="range" class='slide' min="0" max="300" step="1" value="0"
+								   oninput="onSlider( 5, this.value )">
+						<td><img src="image/PlayButton.png" width=24 height=24 onclick="onPlay( 5 )" /></td>
+					</tr>
+					<tr>
+						<td id="animName06">Animation06</td>
+						<td><img src="image/BackButton.png" width=24 height=24 onclick="onReverse( 6 )" /></td>
+						<td>
+							<input id="slide06" type="range" class='slide' min="0" max="300" step="1" value="0"
+								   oninput="onSlider( 6, this.value )">
+						<td><img src="image/PlayButton.png" width=24 height=24 onclick="onPlay( 6 )" /></td>
+					</tr>
+					<tr>
+						<td id="animName07">Animation07</td>
+						<td><img src="image/BackButton.png" width=24 height=24 onclick="onReverse( 7 )" /></td>
+						<td>
+							<input id="slide07" type="range" class='slide' min="0" max="300" step="1" value="0"
+								   oninput="onSlider( 7, this.value )">
+						<td><img src="image/PlayButton.png" width=24 height=24 onclick="onPlay( 7 )" /></td>
+					</tr>
+					<tr>
+						<td id="animName08">Animation08</td>
+						<td><img src="image/BackButton.png" width=24 height=24 onclick="onReverse( 8 )" /></td>
+						<td>
+							<input id="slide08" type="range" class='slide' min="0" max="300" step="1" value="0"
+								   oninput="onSlider( 8, this.value )">
+						<td><img src="image/PlayButton.png" width=24 height=24 onclick="onPlay( 8 )" /></td>
+					</tr>
+				</table>
+			</center>
+			<p>Drag Sliders to Change Frame of Animations</p>
+		</div>
 	</div>
 </body>
 </html>
@@ -97,6 +110,8 @@
 	var sliders = new Array( nAnim );
 	var animNames = new Array( nAnim );
 	var actions = new Array( nAnim );
+	var loadProgress;
+	var progressDiv;
 
 	// global variables
 	var renderer;
@@ -137,9 +152,11 @@
 		container.appendChild( renderer.domElement );
 		for ( let i = 0; i < nAnim; i++ )
 		{
-			sliders[ i ] = document.getElementById( 'slide0' + i );
-			animNames[ i ] = document.getElementById( 'animName0' + i );
+			sliders[ i ] = document.getElementById( 'slide' + ( '00' + i ).slice( -2 ) );
+			animNames[ i ] = document.getElementById( 'animName' + ( '00' + i ).slice( -2 ) );
 		}
+		loadProgress = document.getElementById( 'loadProgress' );
+		progressDiv = document.getElementById( 'progressDiv' );
 
 		effect = new THREE.OutlineEffect( renderer );
 		effect.enabled = true;
@@ -242,6 +259,15 @@
 		dirLight2.shadow.camera.far = 200;
 		scene.add( dirLight2 );
 
+		var onProgress = function ( xhr )
+		{
+			if ( xhr.lengthComputable )
+			{
+				var percentComplete = xhr.loaded / xhr.total * 100;
+				loadProgress.value = percentComplete;
+			}
+		};
+
 		// gltf ファイルの読み込み
 		var loader = new THREE.GLTFLoader();
 		loader.load( glbFile, function ( data )
@@ -268,17 +294,16 @@
 			}
 
 			window.addEventListener( 'resize', onWindowResize );
-		} );
+
+			// Hide Progress Bar
+			progressDiv.style.display = 'none';
+		}, onProgress );
 
 		controls = new function ()
 		{
-			this.NumberOfObjects = scene.children.length;
 			this.OutLine = true;
 			this.CastShadow = true;
 			this.GroundPlane = true;
-			this.GearCover = true;
-			this.Body = true;
-			this.AnimTime = 0.0;
 
 			this.View = 'View00';
 
@@ -289,7 +314,6 @@
 				if ( lastObject instanceof THREE.Mesh )
 				{
 					scene.remove( lastObject );
-					this.NumberOfObjects = scene.children.length;
 				}
 			};
 
@@ -309,7 +333,6 @@
 
 				// add the cube to the scene
 				scene.add( cube );
-				this.NumberOfObjects = scene.children.length;
 			};
 
 			this.ViewPosition = function ()
@@ -362,9 +385,6 @@
 		gui.add( controls, 'CastShadow' ).onChange( setCastShadow );
 		gui.add( controls, 'GroundPlane' ).onChange( setGroundPlane );
 
-
-		this.NumberOfObjects = scene.children.length;
-
 		viewCtrl.onChange( function ()
 		{
 			var idx = views.indexOf( controls.View );
@@ -376,22 +396,6 @@
 			camControl.target = new THREE.Vector3( viewArray[ idx ].lookAt.x,
 				viewArray[ idx ].lookAt.y, viewArray[ idx ].lookAt.z );
 		} );
-
-		// checkbox が押されたときの obj 更新
-		function setVisible()
-		{
-			for ( let i = 0; i < partsArray.length; i++ )
-			{
-				eval( "bVisible = controls." + partsArray[ i ] + ";" );
-				for ( let j = 0; j < obj.children.length; j++ )
-				{
-					if ( obj.children[ j ].name == partsArray[ i ] )
-					{
-						obj.children[ j ].visible = bVisible;
-					}
-				}
-			}
-		}
 
 		function setCastShadow()
 		{
@@ -451,7 +455,7 @@
 		actions[ iAnim ].paused = true;
 		actions[ iAnim ].time = val / 30;
 	}
-	
+
 	function onPlay( iAnim )
 	{
 		actions[ iAnim ].paused = false;

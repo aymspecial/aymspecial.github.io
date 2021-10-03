@@ -21,6 +21,20 @@ body {
     z-index: 100;
 }
 
+#progressDiv {
+    color: #910000;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    top: 20%;
+    z-index: 100;
+    -webkit-transition: all 1s;
+    -moz-transition: all 1s;
+    -o-transition: all 1s;
+    transition: all 1s;
+    opacity: 1;
+}
+
 input[type=range].slide {
     -webkit-appearance: none;
     background-color: #666;
