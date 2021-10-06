@@ -103,6 +103,7 @@
 <script>
 	// マジック
 	const glbFile = 'assets/Tornado_00.glb';
+	const glbSize = 1876967; // ファイルサイズレスポンスが取れない場合（泣）
 	// アニメーション
 	const nAnim = 9;
 	var animations;
@@ -261,13 +262,16 @@
 
 		var onProgress = function ( xhr )
 		{
-			var gazou = xhr.target.responseURL;
-			var fsize = gazou.fileSize;
 			if ( xhr.lengthComputable )
 			{
 				var percentComplete = xhr.loaded / xhr.total * 100;
-				loadProgress.value = percentComplete;
 			}
+			else
+			{
+				var percentComplete = xhr.loaded / glbSize * 100;
+			}
+			loadProgress.value = percentComplete;
+
 		};
 
 		// gltf ファイルの読み込み
