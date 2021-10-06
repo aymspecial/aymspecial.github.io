@@ -261,6 +261,8 @@
 
 		var onProgress = function ( xhr )
 		{
+			var gazou = xhr.target.responseURL;
+			var fsize = gazou.fileSize;
 			if ( xhr.lengthComputable )
 			{
 				var percentComplete = xhr.loaded / xhr.total * 100;
