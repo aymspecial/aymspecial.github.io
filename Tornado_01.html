@@ -95,7 +95,7 @@
 					</tr>
 				</table>
 			</center>
-			<p>Drag Sliders to Change Frame of Animations</p>
+			<p>  Drag Sliders to Change Frame of Animations</p>
 		</div>
 	</div>
 </body>
@@ -103,7 +103,12 @@
 <script>
 	// マジック
 	const glbFile = 'assets/Tornado_00.glb';
-	const glbSize = 1876967; // ファイルサイズレスポンスが取れない場合（泣）
+
+	// Github ではファイルサイズレスポンスが取れんかった
+	// ローカルの IIS ではきちんと取れてる。
+	// デバッガに出る圧縮送信サイズではなく元のファイルサイズを書くべし
+	const glbSize = 3834076;
+	
 	// アニメーション
 	const nAnim = 9;
 	var animations;
