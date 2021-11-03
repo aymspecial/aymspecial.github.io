@@ -4,7 +4,7 @@
 
 	<script type="module" src="/lib/three.js/build/three.js"></script>
 	<script type="module" src="/lib/three.js/examples/js/loaders/GLTFLoader.js"></script>
-	<script type="module" src="/lib/three.js/examples/js/controls/TrackballControls.js"></script>
+	<script type="module" src="/lib/three.js/examples/js/controls/OrbitControls.js"></script>
 	<script type="text/javascript" src="/lib/dat.gui/dat.gui.js"></script>
 	<script type="module" src="/lib/three.js/examples/js/effects/OutlineEffect.js"></script>
 
@@ -25,7 +25,7 @@
 						<td><img src="image/BackButton.png" width=24 height=24 onclick="onReverse( 0 )" /></td>
 						<td>
 							<input id="slide00" type="range" class='slide' min="0" max="300" step="1" value="0"
-								   oninput="onSlider( 0, this.value )">
+								   oninput="onSlider( 0, this.value )"></td>
 						<td><img src="image/PlayButton.png" width=24 height=24 onclick="onPlay( 0 )" /></td>
 					</tr>
 				</table>
@@ -127,7 +127,7 @@
 		camera.lookAt( scene.position );
 
 		// Camera Mouse Control
-		camControl = new THREE.TrackballControls( camera, renderer.domElement );
+		camControl = new THREE.OrbitControls( camera, renderer.domElement );
 		camControl.rotateSpeed = 4;
 
 		// 読み込んだシーンが暗いので明るくする
@@ -211,7 +211,6 @@
 				var percentComplete = xhr.loaded / glbSize * 100;
 			}
 			loadProgress.value = percentComplete;
-
 		};
 
 		// gltf ファイルの読み込み
