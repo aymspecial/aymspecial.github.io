@@ -2,12 +2,12 @@
 	<meta charset="utf-8" />
 	<title>Real-Time 3D Graphics with WebGL 2</title>
 
-	<script type="module" src="/lib/three.js/build/three.js"></script>
-	<script type="module" src="/lib/three.js/examples/js/loaders/GLTFLoader.js"></script>
-	<script type="module" src="/lib/three.js/examples/js/controls/OrbitControls.js"></script>
-	<script type="text/javascript" src="/lib/dat.gui/dat.gui.js"></script>
-	<script type="module" src="/lib/three.js/examples/js/effects/OutlineEffect.js"></script>
-
+	<script src="/lib/three.js/build/three.min.js"></script>
+	<script src="/lib/dat.gui/dat.gui.min.js"></script>
+	<script src="/lib/three.js/examples/js/loaders/GLTFLoader.js"></script>
+	<script src="/lib/three.js/examples/js/controls/OrbitControls.js"></script>
+	<script src="/lib/three.js/examples/js/effects/OutlineEffect.js"></script>
+	
 	<link rel="stylesheet" href="/css/galaxy.css">
 </head>
 
@@ -31,7 +31,7 @@
 					</tr>
 				</table>
 			</center>
-			<p>  Drag Sliders to Change Frame of Animations</p>
+			<p>  Drag Slider to Change Frame of Animations</p>
 		</div>
 	</div>
 </body>
@@ -131,9 +131,6 @@
 		camControl = new THREE.OrbitControls( camera, renderer.domElement );
 		camControl.rotateSpeed = 4;
 
-		// 読み込んだシーンが暗いので明るくする
-		renderer.outputEncoding = THREE.GammaEncoding;
-
 		// create the ground plane
 		var planeGeometry = new THREE.PlaneGeometry( 60, 40, 18, 12 );
 
@@ -159,10 +156,6 @@
 		scene.add( groundPlane1 );
 		scene.add( groundPlane2 );
 
-		// add subtle ambient lighting
-		var ambientLight = new THREE.AmbientLight( 0x0c0c0c );
-		scene.add( ambientLight );
-
 		// Add Cube
 		var cubeSize = Math.ceil( ( Math.random() * 3 ) );
 		var cubeGeometry = new THREE.BoxGeometry( cubeSize, cubeSize, cubeSize );
@@ -177,9 +170,16 @@
 		cube.position.z = -1;
 		// add the cube to the scene
 		scene.add( cube );
-		
+
+		// 読み込んだシーンが暗いので明るくする
+		renderer.outputEncoding = THREE.GammaEncoding;
+
+		// add subtle ambient lighting
+		const ambientLight = new THREE.AmbientLight( 0x888888 );
+		scene.add( ambientLight );
+
 		// 並行光源の追加
-		const dirLight1 = new THREE.DirectionalLight( 0x888888 );
+		const dirLight1 = new THREE.DirectionalLight( 0x666666 );
 		dirLight1.position.set( 20, 20, 25 );
 		dirLight1.castShadow = true;
 		dirLight1.shadow.camera.top = 50;
@@ -191,15 +191,13 @@
 		dirLight1.shadow.mapSize.set( 2048, 2048 );
 		scene.add( dirLight1 );
 
-		const dirLight2 = new THREE.DirectionalLight( 0x888888 );
-		dirLight2.position.set( -20, 20, 25 );
-		dirLight2.shadow.camera.top = 50;
-		dirLight2.shadow.camera.bottom = -25;
-		dirLight2.shadow.camera.left = -25;
-		dirLight2.shadow.camera.right = 25;
-		dirLight2.shadow.camera.near = 0.1;
-		dirLight2.shadow.camera.far = 200;
+		const dirLight2 = new THREE.DirectionalLight( 0x444444 );
+		dirLight2.position.set( -20, -20, 25 );
 		scene.add( dirLight2 );
+
+		const dirLight3 = new THREE.DirectionalLight( 0x666666 );
+		dirLight3.position.set( -20, 20, 25 );
+		scene.add( dirLight3 );
 
 		var onProgress = function ( xhr )
 		{

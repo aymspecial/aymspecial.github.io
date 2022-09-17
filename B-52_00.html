@@ -56,7 +56,7 @@
 
 		// create a render, sets the background color and the size
 		renderer = new THREE.WebGLRenderer( { antialias: true } );
-		renderer.setClearColor( 0xeeeeee, 1.0 );
+		renderer.setClearColor( 0xddddee, 1.0 );
 		renderer.setSize( window.innerWidth, window.innerHeight );
 		renderer.shadowMapEnabled = true;
 
@@ -94,13 +94,10 @@
 		camControl = new THREE.TrackballControls( camera, renderer.domElement );
 		camControl.rotateSpeed = 4;
 
-		// 読み込んだシーンが暗いので明るくする
-		renderer.outputEncoding = THREE.GammaEncoding;
-
 		// create the ground plane
 		var planeGeometry = new THREE.PlaneGeometry( 60, 40, 18, 12 );
 
-		var material1 = new THREE.MeshLambertMaterial( { color: 0xddffff } );
+		var material1 = new THREE.MeshLambertMaterial( { color: 0xaacccc } );
 		var material2 = new THREE.MeshBasicMaterial( { color: 0x333333, wireframe: true } );
 		var groundPlane1 = new THREE.Mesh( planeGeometry, material1 );
 		var groundPlane2 = new THREE.Mesh( planeGeometry, material2 );
@@ -122,12 +119,15 @@
 		scene.add( groundPlane1 );
 		scene.add( groundPlane2 );
 
+		// 読み込んだシーンが暗いので明るくする
+		renderer.outputEncoding = THREE.GammaEncoding;
+
 		// add subtle ambient lighting
-		var ambientLight = new THREE.AmbientLight( 0x0c0c0c );
+		var ambientLight = new THREE.AmbientLight( 0x888888 );
 		scene.add( ambientLight );
 
 		// 並行光源の追加
-		const dirLight1 = new THREE.DirectionalLight( 0x888888 );
+		const dirLight1 = new THREE.DirectionalLight( 0x777777 );
 		dirLight1.position.set( 20, 20, 25 );
 		dirLight1.castShadow = true;
 		dirLight1.shadow.camera.top = 50;
@@ -139,7 +139,7 @@
 		dirLight1.shadow.mapSize.set( 2048, 2048 );
 		scene.add( dirLight1 );
 
-		const dirLight2 = new THREE.DirectionalLight( 0x888888 );
+		const dirLight2 = new THREE.DirectionalLight( 0x666666 );
 		dirLight2.position.set( -20, 20, 25 );
 		dirLight2.shadow.camera.top = 50;
 		dirLight2.shadow.camera.bottom = -25;

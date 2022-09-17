@@ -131,9 +131,6 @@
 		camControl = new THREE.OrbitControls( camera, renderer.domElement );
 		camControl.rotateSpeed = 4;
 
-		// 読み込んだシーンが暗いので明るくする
-		renderer.outputEncoding = THREE.GammaEncoding;
-
 		// create the ground plane
 		var planeGeometry = new THREE.PlaneGeometry( 60, 40, 18, 12 );
 
@@ -159,10 +156,6 @@
 		scene.add( groundPlane1 );
 		scene.add( groundPlane2 );
 
-		// add subtle ambient lighting
-		var ambientLight = new THREE.AmbientLight( 0x0c0c0c );
-		scene.add( ambientLight );
-
 		// Add Cube
 		var cubeSize = Math.ceil( ( Math.random() * 3 ) );
 		var cubeGeometry = new THREE.BoxGeometry( cubeSize, cubeSize, cubeSize );
@@ -178,6 +171,14 @@
 
 		// add the cube to the scene
 		scene.add( cube );
+
+		// 読み込んだシーンが暗いので明るくする
+		renderer.outputEncoding = THREE.GammaEncoding;
+
+		// add subtle ambient lighting
+		var ambientLight = new THREE.AmbientLight( 0x909090 );
+		scene.add( ambientLight );
+
 		// 並行光源の追加
 		const dirLight1 = new THREE.DirectionalLight( 0x888888 );
 		dirLight1.position.set( 20, 20, 25 );
@@ -193,12 +194,6 @@
 
 		const dirLight2 = new THREE.DirectionalLight( 0x888888 );
 		dirLight2.position.set( -20, -20, 25 );
-		dirLight2.shadow.camera.top = 50;
-		dirLight2.shadow.camera.bottom = -25;
-		dirLight2.shadow.camera.left = -25;
-		dirLight2.shadow.camera.right = 25;
-		dirLight2.shadow.camera.near = 0.1;
-		dirLight2.shadow.camera.far = 200;
 		scene.add( dirLight2 );
 
 		var onProgress = function ( xhr )
