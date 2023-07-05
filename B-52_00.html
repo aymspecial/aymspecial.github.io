@@ -2,27 +2,69 @@
 	<meta charset="utf-8" />
 	<title>Real-Time 3D Graphics with WebGL 2</title>
 
-	<!-- type="module" を付けないと ファイル中の"import"文で落ちる -->
-	<script type="module" src="/lib/three.js/build/three.js"></script>
-
-	<!-- jsm ではなく js を用いないと実行エラーになる -->
-	<script type="module" src="/lib/three.js/examples/js/loaders/GLTFLoader.js"></script>
-	<script type="module" src="/lib/three.js/examples/js/controls/TrackballControls.js"></script>
-	<script type="text/javascript" src="/lib/dat.gui/dat.gui.js"></script>
-	<script type="module" src="/lib/three.js/examples/js/effects/OutlineEffect.js"></script>
-
-	<link rel="stylesheet" href="css/design.css">
+	<link rel="stylesheet" href="/css/galaxy.css">
 </head>
+
 <html>
 <body>
-	<div id="webgl-div"></div>
-	<div id="inner">
-		<input id="slide" type="range" class='slide' min="0" max="300" step="1" value="0" oninput="showVal( this.value )">
-		<p>DRAG THE SLIDER TO CHANGE THE FRAME OF ANIMATION</p>
+	<script src="/lib/dat.gui/dat.gui.min.js"></script>
+	
+	<div id="webgl-div">
+		<div id="progressDiv">
+			Loading...<br />
+			<progress id="loadProgress" max="100" value="0"> 0% </progress>
+		</div>
+		<div id="inner">
+			<center>
+				<table valign="center" width=20%>
+					<tr>
+						<td id="animName00">Animation00</td>
+						<td><img src="image/BackButton.png" width=24 height=24 onclick="onReverse( 0 )" /></td>
+						<td>
+							<input id="slide00" type="range" class='slide' min="0" max="300" step="1" value="0"
+								   oninput="onSlider( 0, this.value )"></td>
+						<td><img src="image/PlayButton.png" width=24 height=24 onclick="onPlay( 0 )" /></td>
+					</tr>
+				</table>
+			</center>
+			<p>  Drag Sliders to Change Frame of Animations</p>
+		</div>
 	</div>
 </body>
 </html>
-<script>
+<script type="importmap">
+	{
+		"imports": {
+			"three": "/lib/three.js/build/three.module.js",
+			"three/addons/": "/lib/three.js/examples/jsm/"
+		}
+	}
+</script>
+
+<script type="module">
+	import * as THREE from 'three';
+	import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+	import { OutlineEffect } from 'three/addons/effects/OutlineEffect.js';
+	import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+	// マジック
+	const glbFile = 'assets/B-52_00.glb';
+
+	// Github ではファイルサイズレスポンスが取れんかった
+	// ローカルの IIS ではきちんと取れてる。
+	// デバッガに出る圧縮送信サイズではなく元のファイルサイズを書くべし
+	const glbSize = 9822120;
+	
+	// アニメーション
+	const nAnim = 1;
+	var animations;
+	var controls;
+	var sliders = new Array( nAnim );
+	var animNames = new Array( nAnim );
+	var actions = new Array( nAnim );
+	var loadProgress;
+	var progressDiv;
+
 	// global variables
 	var renderer;
 	var scene;
@@ -35,10 +77,6 @@
 	var gui;
 	var partsArray = new Array();
 	var effect;
-
-	var animations;
-	var controls;
-	var slider;
 
 	class PosTo
 	{
@@ -56,17 +94,23 @@
 
 		// create a render, sets the background color and the size
 		renderer = new THREE.WebGLRenderer( { antialias: true } );
-		renderer.setClearColor( 0xddddee, 1.0 );
+		renderer.setClearColor( 0xeeeeee, 1.0 );
 		renderer.setSize( window.innerWidth, window.innerHeight );
-		renderer.shadowMapEnabled = true;
+		renderer.shadowMap.enabled = true;
 
 		// Renderer と Div の関連付け
 		container = document.getElementById( 'webgl-div' );
 		document.body.appendChild( container );
 		container.appendChild( renderer.domElement );
-		slider = document.getElementById( "slide" );
+		for ( let i = 0; i < nAnim; i++ )
+		{
+			sliders[ i ] = document.getElementById( 'slide' + ( '00' + i ).slice( -2 ) );
+			animNames[ i ] = document.getElementById( 'animName' + ( '00' + i ).slice( -2 ) );
+		}
+		loadProgress = document.getElementById( 'loadProgress' );
+		progressDiv = document.getElementById( 'progressDiv' );
 
-		effect = new THREE.OutlineEffect( renderer );
+		effect = new OutlineEffect( renderer );
 		effect.enabled = true;
 
 		// view の定義
@@ -75,12 +119,15 @@
 		viewArray[ 0 ] = new PosTo();
 		viewArray[ 1 ] = new PosTo();
 		viewArray[ 2 ] = new PosTo();
-		viewArray[ 0 ].position = new THREE.Vector3( 20, 5, 13 );
-		viewArray[ 0 ].lookAt = new THREE.Vector3( 0, 0, 0 );
+		viewArray[ 3 ] = new PosTo();
+		viewArray[ 0 ].position = new THREE.Vector3( 27.5, 27.6, 6.7 );
+		viewArray[ 0 ].lookAt = new THREE.Vector3( 3.7, -0.5, -2.0 );
 		viewArray[ 1 ].position = new THREE.Vector3( 0.355, 0.395, 2.153 );
 		viewArray[ 1 ].lookAt = new THREE.Vector3( -0.4449, 0.403, 0.009 );
 		viewArray[ 2 ].position = new THREE.Vector3( -1.637, 1.560, 0.776 );
 		viewArray[ 2 ].lookAt = new THREE.Vector3( -0.313, 0.774, -0.093 );
+		viewArray[ 3 ].position = new THREE.Vector3( -1.637, 1.560, 0.776 );
+		viewArray[ 3 ].lookAt = new THREE.Vector3( -0.313, 0.774, -0.093 );
 
 		// create a camera, which defines where we're looking at.
 		camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 1000 );
@@ -91,13 +138,13 @@
 		camera.lookAt( scene.position );
 
 		// Camera Mouse Control
-		camControl = new THREE.TrackballControls( camera, renderer.domElement );
+		camControl = new OrbitControls( camera, renderer.domElement );
 		camControl.rotateSpeed = 4;
 
 		// create the ground plane
 		var planeGeometry = new THREE.PlaneGeometry( 60, 40, 18, 12 );
 
-		var material1 = new THREE.MeshLambertMaterial( { color: 0xaacccc } );
+		var material1 = new THREE.MeshLambertMaterial( { color: 0xddffff } );
 		var material2 = new THREE.MeshBasicMaterial( { color: 0x333333, wireframe: true } );
 		var groundPlane1 = new THREE.Mesh( planeGeometry, material1 );
 		var groundPlane2 = new THREE.Mesh( planeGeometry, material2 );
@@ -119,15 +166,31 @@
 		scene.add( groundPlane1 );
 		scene.add( groundPlane2 );
 
+		// Add Cube
+		var cubeSize = Math.ceil( ( Math.random() * 3 ) );
+		var cubeGeometry = new THREE.BoxGeometry( cubeSize, cubeSize, cubeSize );
+		var cubeMaterial = new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } );
+		var cube = new THREE.Mesh( cubeGeometry, cubeMaterial );
+		cube.castShadow = true;
+		cube.name = "cube-" + scene.children.length;
+
+		// position the cube randomly in the scene
+		cube.position.x = -15;
+		cube.position.y = 2;
+		cube.position.z = -1;
+
+		// add the cube to the scene
+		scene.add( cube );
+
 		// 読み込んだシーンが暗いので明るくする
-		renderer.outputEncoding = THREE.GammaEncoding;
+		renderer.outputEncoding = THREE.sRGBEncoding;;
 
 		// add subtle ambient lighting
-		var ambientLight = new THREE.AmbientLight( 0x888888 );
+		var ambientLight = new THREE.AmbientLight( 0x808080 );
 		scene.add( ambientLight );
 
 		// 並行光源の追加
-		const dirLight1 = new THREE.DirectionalLight( 0x777777 );
+		const dirLight1 = new THREE.DirectionalLight( 0xbbbbbb );
 		dirLight1.position.set( 20, 20, 25 );
 		dirLight1.castShadow = true;
 		dirLight1.shadow.camera.top = 50;
@@ -139,19 +202,26 @@
 		dirLight1.shadow.mapSize.set( 2048, 2048 );
 		scene.add( dirLight1 );
 
-		const dirLight2 = new THREE.DirectionalLight( 0x666666 );
-		dirLight2.position.set( -20, 20, 25 );
-		dirLight2.shadow.camera.top = 50;
-		dirLight2.shadow.camera.bottom = -25;
-		dirLight2.shadow.camera.left = -25;
-		dirLight2.shadow.camera.right = 25;
-		dirLight2.shadow.camera.near = 0.1;
-		dirLight2.shadow.camera.far = 200;
+		const dirLight2 = new THREE.DirectionalLight( 0x707070 );
+		dirLight2.position.set( -20, -20, 25 );
 		scene.add( dirLight2 );
 
+		var onProgress = function ( xhr )
+		{
+			if ( xhr.lengthComputable )
+			{
+				var percentComplete = xhr.loaded / xhr.total * 100;
+			}
+			else
+			{
+				var percentComplete = xhr.loaded / glbSize * 100;
+			}
+			loadProgress.value = percentComplete;
+		};
+
 		// gltf ファイルの読み込み
-		var loader = new THREE.GLTFLoader();
-		loader.load( 'assets/B-52_00.glb', function ( data )
+		var loader = new GLTFLoader();
+		loader.load( glbFile, function ( data )
 		{
 			const gltf = data;
 			obj = gltf.scene;
@@ -161,25 +231,12 @@
 			controls.Restart();
 
 			// 影を持つ
-			obj.traverse( function ( child ) { child.castShadow = true; } );
+			obj.traverse( function ( child )
+			{
+				child.castShadow = true;
+			} );
 
 			scene.add( obj );
-
-			// Add Cube
-			var cubeSize = Math.ceil( ( Math.random() * 3 ) );
-			var cubeGeometry = new THREE.BoxGeometry( cubeSize, cubeSize, cubeSize );
-			var cubeMaterial = new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } );
-			var cube = new THREE.Mesh( cubeGeometry, cubeMaterial );
-			cube.castShadow = true;
-			cube.name = "cube-" + scene.children.length;
-
-			// position the cube randomly in the scene
-			cube.position.x = -15;
-			cube.position.y = 2;
-			cube.position.z = -1;
-
-			// add the cube to the scene
-			scene.add( cube );
 
 			// children の名前で変数を追加し、checkbox で登録する
 			for ( let i = 0; i < obj.children.length; i++ )
@@ -188,18 +245,16 @@
 			}
 
 			window.addEventListener( 'resize', onWindowResize );
-		} );
+
+			// Hide Progress Bar
+			progressDiv.style.display = 'none';
+		}, onProgress );
 
 		controls = new function ()
 		{
-			this.AnimationSpeed = 1.0;
-			this.NumberOfObjects = scene.children.length;
 			this.OutLine = true;
 			this.CastShadow = true;
 			this.GroundPlane = true;
-			this.GearCover = true;
-			this.Body = true;
-			this.AnimTime = 0.0;
 
 			this.View = 'View00';
 
@@ -210,7 +265,6 @@
 				if ( lastObject instanceof THREE.Mesh )
 				{
 					scene.remove( lastObject );
-					this.NumberOfObjects = scene.children.length;
 				}
 			};
 
@@ -230,7 +284,6 @@
 
 				// add the cube to the scene
 				scene.add( cube );
-				this.NumberOfObjects = scene.children.length;
 			};
 
 			this.ViewPosition = function ()
@@ -250,50 +303,38 @@
 					// Animation Mixerインスタンスを生成
 					mixer = new THREE.AnimationMixer( obj );
 
-
 					// 全ての Animation Clip に対して
-					for ( let i = 0; i < animations.length; i++ )
+					for ( let i = 0; i < nAnim; i++ )
 					{
-						let animation = animations[ i ];
+						// AnimationActionを生成
+						actions[ i ] = mixer.clipAction( animations[ i ] );
 
-						// Animation Actionを生成
-						var action = mixer.clipAction( animation );
+						sliders[ i ].max = actions[ i ]._clip.duration * 30;
 
 						// ループ設定（1回のみ）
-						action.setLoop( THREE.LoopOnce );
+						actions[ i ].setLoop( THREE.LoopOnce );
 
 						// アニメーションの最後のフレームでアニメーションが終了
-						action.clampWhenFinished = true;
+						actions[ i ].clampWhenFinished = true;
 
-						// アニメーションを再生
-						action.play();
+						// stop した状態で開始する場合も一旦 Play を呼び出して Pause 状態にしないと
+						// AnimationAction の中身が揃わない
+						actions[ i ].play();
+						actions[ i ].paused = true;
+
+						animNames[ i ].innerText = actions[ i ]._clip.name;
 					}
 				}
 			};
 		};
 
 		gui = new dat.GUI();
-		gui.add( controls, 'AnimationSpeed', 0.1, 10.0 );
 		// states
 		const viewCtrl = gui.add( controls, 'View' ).options( views );
 		gui.add( controls, 'ViewPosition' );
-		gui.add( controls, 'Restart' );
 		gui.add( controls, 'OutLine' ).onChange( setOutLine );
 		gui.add( controls, 'CastShadow' ).onChange( setCastShadow );
 		gui.add( controls, 'GroundPlane' ).onChange( setGroundPlane );
-
-		gui.add( controls, 'AddCube' );
-		gui.add( controls, 'RemoveCube' );
-		gui.add( controls, 'NumberOfObjects' ).listen();
-		gui.add( controls, 'AnimTime' ).listen();
-
-		// Objects
-		var objectFolder = gui.addFolder( 'Objects' )
-		objectFolder.add( controls, 'Body' ).onChange( setVisible );
-		objectFolder.add( controls, 'GearCover' ).onChange( setVisible );
-		objectFolder.open();
-
-		this.NumberOfObjects = scene.children.length;
 
 		viewCtrl.onChange( function ()
 		{
@@ -306,22 +347,6 @@
 			camControl.target = new THREE.Vector3( viewArray[ idx ].lookAt.x,
 				viewArray[ idx ].lookAt.y, viewArray[ idx ].lookAt.z );
 		} );
-
-		// checkbox が押されたときの obj 更新
-		function setVisible()
-		{
-			for ( let i = 0; i < partsArray.length; i++ )
-			{
-				eval( "bVisible = controls." + partsArray[ i ] + ";" );
-				for ( let j = 0; j < obj.children.length; j++ )
-				{
-					if ( obj.children[ j ].name == partsArray[ i ] )
-					{
-						obj.children[ j ].visible = bVisible;
-					}
-				}
-			}
-		}
 
 		function setCastShadow()
 		{
@@ -352,8 +377,6 @@
 		render();
 	}
 
-	var t = 0.0;
-
 	function render()
 	{
 		effect.render( scene, camera );
@@ -366,25 +389,32 @@
 		{
 			mixer.update( clock.getDelta() );
 			// スライダー位置を変更する
-			var action = mixer._actions[ 0 ];
-			if ( action.paused == false )
+			for ( let i = 0; i < nAnim; i++ )
 			{
-				slider.value = action.time * 30;
+				if ( actions[ i ].paused === false ) //&& actions[ i ].paused == false )
+				{
+					sliders[ i ].value = actions[ i ].time * 30;
+				}
 			}
 		}
 	}
 
-	function showVal( val )
+	window.onSlider = ( iAnim, val ) =>
 	{
-		controls.AnimTime = val;
+		actions[ iAnim ].paused = true;
+		actions[ iAnim ].time = val / 30;
+	}
 
-		// 全ての Animation Clip に対して slider の値を設定
-		for ( let i = 0; i < mixer._actions.length; i++ )
-		{
-			var action = mixer._actions[ i ];
-			action.paused = true;
-			action.time = val / 30;
-		}
+	window.onPlay = ( iAnim ) =>
+	{
+		actions[ iAnim ].paused = false;
+		actions[ iAnim ].timeScale = 1;
+	}
+
+	window.onReverse = ( iAnim ) =>
+	{
+		actions[ iAnim ].paused = false;
+		actions[ iAnim ].timeScale = -1;
 	}
 
 	window.onload = init;
