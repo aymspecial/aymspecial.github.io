@@ -21,7 +21,7 @@
 						<td id="animName00">Animation00</td>
 						<td><img src="image/BackButton.png" width=24 height=24 onclick="onReverse( 0 )" /></td>
 						<td>
-							<input id="slide00" type="range" class='slide' min="0" max="300" step="1" value="0"
+							<input id="slide00" type="range" class='slide' min="1" max="99" step="1" value="0"
 								   oninput="onSlider( 0, this.value )"></td>
 						<td><img src="image/PlayButton.png" width=24 height=24 onclick="onPlay( 0 )" /></td>
 					</tr>
@@ -93,7 +93,7 @@
 		clock = new THREE.Clock();
 
 		// create a render, sets the background color and the size
-		renderer = new THREE.WebGLRenderer( { antialias: true } );
+		renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
 		renderer.setClearColor( 0xeeeeee, 1.0 );
 		renderer.setSize( window.innerWidth, window.innerHeight );
 		renderer.shadowMap.enabled = true;
