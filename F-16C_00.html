@@ -21,7 +21,7 @@
 						<td id="animName00">Animation00</td>
 						<td><img src="image/BackButton.png" width=24 height=24 onclick="onReverse( 0 )" /></td>
 						<td>
-							<input id="slide00" type="range" class='slide' min="1" max="99" step="1" value="0"
+							<input id="slide00" type="range" class='slide' min="0" max="100" step="1" value="0"
 								   oninput="onSlider( 0, this.value )"></td>
 						<td><img src="image/PlayButton.png" width=24 height=24 onclick="onPlay( 0 )" /></td>
 					</tr>
@@ -393,7 +393,7 @@
 			{
 				if ( actions[ i ].paused === false ) //&& actions[ i ].paused == false )
 				{
-					sliders[ i ].value = actions[ i ].time * 30;
+					sliders[ i ].value = actions[ i ].time * 30 + 1;
 				}
 			}
 		}
