@@ -401,16 +401,22 @@
 		var mGround = scene.children.find( ( v ) => v.name == 'ground' );
 		var mGLine  = scene.children.find( ( v ) => v.name == 'groundLine' );
 		
-		if( controls.GroundPlane == false || 1.0 < actions[ 0 ].time * 30 )
-		{
-			mGround.visible = false;
-			mGLine.visible = false;
-		}
-		else
-		{
-			mGround.visible = true;
-			mGLine.visible = true;
-		}
+		// アニメーションが始まる前は 'actions[ 0 ].time' の '.time' が存在しないので
+		// 苦肉の策でこんなことをしたが、、、なんか違うんだよな
+		// アニメーションが存在しなければ actions が存在しないし。
+		if ( controls.GroundPlane == false )
+			if ( actions ?? false )
+				if ( actions[ 0 ].time ?? false )
+					if ( 1.0 < 30.0 * actions[ 0 ].time )
+					{
+						mGround.visible = false;
+						mGLine.visible = false;
+					}
+					else
+					{
+						mGround.visible = true;
+						mGLine.visible = true;
+					}
 	}
 
 	window.onSlider = ( iAnim, val ) =>
