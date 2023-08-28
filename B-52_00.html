@@ -175,9 +175,9 @@
 		cube.name = "cube-" + scene.children.length;
 
 		// position the cube randomly in the scene
-		cube.position.x = -15;
+		cube.position.x = -20;
 		cube.position.y = 2;
-		cube.position.z = -1;
+		cube.position.z = 10;
 
 		// add the cube to the scene
 		scene.add( cube );
@@ -226,6 +226,7 @@
 			const gltf = data;
 			obj = gltf.scene;
 			animations = gltf.animations;
+			obj.scale.set( 2.0, 2.0, 2.0 );
 
 			// アニメーションスタート
 			controls.Restart();
