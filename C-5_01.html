@@ -183,14 +183,14 @@
 		scene.add( cube );
 
 		// 読み込んだシーンが暗いので明るくする
-		renderer.outputEncoding = THREE.sRGBEncoding;;
+		renderer.outputColorSpace = THREE.SRGBColorSpace;
 
 		// add subtle ambient lighting
-		var ambientLight = new THREE.AmbientLight( 0x808080 );
+		var ambientLight = new THREE.AmbientLight( 0xffffff );
 		scene.add( ambientLight );
 
 		// 並行光源の追加
-		const dirLight1 = new THREE.DirectionalLight( 0xbbbbbb );
+		const dirLight1 = new THREE.DirectionalLight( 0xffffff );
 		dirLight1.position.set( 20, 20, 25 );
 		dirLight1.castShadow = true;
 		dirLight1.shadow.camera.top = 50;
@@ -202,7 +202,7 @@
 		dirLight1.shadow.mapSize.set( 2048, 2048 );
 		scene.add( dirLight1 );
 
-		const dirLight2 = new THREE.DirectionalLight( 0x707070 );
+		const dirLight2 = new THREE.DirectionalLight( 0xffffff );
 		dirLight2.position.set( -20, -20, 25 );
 		scene.add( dirLight2 );
 

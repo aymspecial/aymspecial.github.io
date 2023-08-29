@@ -105,7 +105,7 @@
 		// create the ground plane
 		var planeGeometry = new THREE.PlaneGeometry( 60, 40, 18, 12 );
 
-		var material1 = new THREE.MeshLambertMaterial( { color: 0x889999 } );
+		var material1 = new THREE.MeshLambertMaterial( { color: 0xddeeee } );
 		var material2 = new THREE.MeshBasicMaterial( { color: 0x333333, wireframe: true } );
 		var groundPlane1 = new THREE.Mesh( planeGeometry, material1 );
 		var groundPlane2 = new THREE.Mesh( planeGeometry, material2 );
@@ -135,7 +135,7 @@
 		scene.add( ambientLight );
 
 		// 並行光源の追加
-		const dirLight1 = new THREE.DirectionalLight( 0x888888 );
+		const dirLight1 = new THREE.DirectionalLight( 0xffffff );
 		dirLight1.position.set( 20, 20, 25 );
 		dirLight1.castShadow = true;
 		dirLight1.shadow.camera.top = 50;
@@ -147,10 +147,9 @@
 		dirLight1.shadow.mapSize.set( 2048, 2048 );
 		scene.add( dirLight1 );
 
-		const dirLight2 = new THREE.DirectionalLight( 0x888888 );
-		dirLight2.position.set( -20, 20, 25 );
+		const dirLight2 = new THREE.DirectionalLight( 0xffffff );
+		dirLight2.position.set( -20, -20, 25 );
 		scene.add( dirLight2 );
-		
 		
 		// gltf ファイルの読み込み
 		var loader = new GLTFLoader();

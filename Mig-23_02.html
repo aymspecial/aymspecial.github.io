@@ -126,7 +126,7 @@
 		// create the ground plane
 		var planeGeometry = new THREE.PlaneGeometry( 60, 40, 18, 12 );
 
-		var material1 = new THREE.MeshLambertMaterial( { color: 0xaabbbb } );
+		var material1 = new THREE.MeshLambertMaterial( { color: 0xccdddd } );
 		var material2 = new THREE.MeshBasicMaterial( { color: 0x333333, wireframe: true } );
 		var groundPlane1 = new THREE.Mesh( planeGeometry, material1 );
 		var groundPlane2 = new THREE.Mesh( planeGeometry, material2 );
@@ -168,11 +168,11 @@
 		renderer.outputColorSpace = THREE.SRGBColorSpace;
 
 		// add subtle ambient lighting
-		var ambientLight = new THREE.AmbientLight( 0x888888 );
+		var ambientLight = new THREE.AmbientLight( 0xffffff );
 		scene.add( ambientLight );
 
 		// 並行光源の追加
-		const dirLight1 = new THREE.DirectionalLight( 0xaaaaaa );
+		const dirLight1 = new THREE.DirectionalLight( 0xffffff );
 		dirLight1.position.set( 20, 20, 25 );
 		dirLight1.castShadow = true;
 		dirLight1.shadow.camera.top = 50;
@@ -184,14 +184,8 @@
 		dirLight1.shadow.mapSize.set( 2048, 2048 );
 		scene.add( dirLight1 );
 
-		const dirLight2 = new THREE.DirectionalLight( 0x777777 );
-		dirLight2.position.set( -20, 20, 25 );
-		dirLight2.shadow.camera.top = 50;
-		dirLight2.shadow.camera.bottom = -25;
-		dirLight2.shadow.camera.left = -25;
-		dirLight2.shadow.camera.right = 25;
-		dirLight2.shadow.camera.near = 0.1;
-		dirLight2.shadow.camera.far = 200;
+		const dirLight2 = new THREE.DirectionalLight( 0xffffff );
+		dirLight2.position.set( -20, -20, 25 );
 		scene.add( dirLight2 );
 
 		// gltf ファイルの読み込み
