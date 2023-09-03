@@ -48,7 +48,9 @@
 	import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 	// マジック
-	const glbFile = 'assets/A-380_00.glb';
+	const glbFile = 'assets/A-380_00.glb';	// 73m
+	const jeepGlb = 'assets/Jeep_00.glb';	// 3.3m
+	const jeepScale = 0.038;
 
 	// Github ではファイルサイズレスポンスが取れんかった
 	// ローカルの IIS ではきちんと取れてる。
@@ -77,6 +79,10 @@
 	var gui;
 	var partsArray = new Array();
 	var effect;
+
+	var groundPlane1;
+	var groundPlane2;
+	var jeepScene;
 
 	class PosTo
 	{
@@ -146,8 +152,8 @@
 
 		var material1 = new THREE.MeshLambertMaterial( { color: 0xddffff } );
 		var material2 = new THREE.MeshBasicMaterial( { color: 0x333333, wireframe: true } );
-		var groundPlane1 = new THREE.Mesh( planeGeometry, material1 );
-		var groundPlane2 = new THREE.Mesh( planeGeometry, material2 );
+		groundPlane1 = new THREE.Mesh( planeGeometry, material1 );
+		groundPlane2 = new THREE.Mesh( planeGeometry, material2 );
 		groundPlane1.name = 'ground';
 		groundPlane2.name = 'groundLine';
 		groundPlane1.receiveShadow = true;
@@ -174,7 +180,7 @@
 		cube.castShadow = true;
 		cube.name = "cube-" + scene.children.length;
 
-		// position the cube randomly in the scene
+		// position the cube
 		cube.position.x = -15;
 		cube.position.y = 2;
 		cube.position.z = -1;
@@ -249,6 +255,24 @@
 			// Hide Progress Bar
 			progressDiv.style.display = 'none';
 		}, onProgress );
+
+		// 大きさ比較用 Jeep
+		loader.load( jeepGlb, function ( data )
+		{
+			const gltf = data;
+			jeepScene = gltf.scene;
+
+			jeepScene.scale.set( jeepScale, jeepScale, jeepScale ); // Willys MB 全長 3.35
+			jeepScene.position.set( -5, 0, 11 );
+
+			// 影を持つ
+			jeepScene.traverse( function ( child )
+			{
+				child.castShadow = true;
+			} );
+
+			scene.add( jeepScene );
+		} );
 
 		controls = new function ()
 		{
@@ -383,6 +407,20 @@
 
 		camControl.update();
 		requestAnimationFrame( render );
+
+		// 視線ベクトルが上（上空）を向いた場合は地面を消す
+		if ( camera.position.y < camControl.target.y )
+		{
+			groundPlane1.visible = false;
+			groundPlane2.visible = false;
+			jeepScene.visible = false;
+		}
+		else
+		{
+			groundPlane1.visible = true;
+			groundPlane2.visible = true;
+			jeepScene.visible = true;
+		}
 
 		// Animation Mixerを実行
 		if ( mixer )
