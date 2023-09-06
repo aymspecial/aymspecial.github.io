@@ -4,11 +4,9 @@
 
 	<link rel="stylesheet" href="/css/galaxy.css">
 </head>
-
 <html>
+
 <body>
-	<script src="/lib/dat.gui/dat.gui.min.js"></script>
-	
 	<div id="webgl-div">
 		<div id="progressDiv">
 			Loading...<br />
@@ -22,7 +20,8 @@
 						<td><img src="image/BackButton.png" width=24 height=24 onclick="onReverse( 0 )" /></td>
 						<td>
 							<input id="slide00" type="range" class='slide' min="0" max="300" step="1" value="0"
-								   oninput="onSlider( 0, this.value )"></td>
+								   oninput="onSlider( 0, this.value )">
+						</td>
 						<td><img src="image/PlayButton.png" width=24 height=24 onclick="onPlay( 0 )" /></td>
 					</tr>
 				</table>
@@ -32,6 +31,8 @@
 	</div>
 </body>
 </html>
+
+<script src="/lib/dat.gui/dat.gui.min.js"></script>
 <script type="importmap">
 	{
 		"imports": {
@@ -40,7 +41,6 @@
 		}
 	}
 </script>
-
 <script type="module">
 	import * as THREE from 'three';
 	import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -50,13 +50,13 @@
 	// マジック
 	const glbFile = 'assets/B-52_00.glb';
 	const jeepGlb = 'assets/Jeep_00.glb';	 // Willys MB 全長 3.35
-	var jeepScale = 0.085;
+	const jeepScale = 0.085;
 
 	// Github ではファイルサイズレスポンスが取れんかった
 	// ローカルの IIS ではきちんと取れてる。
 	// デバッガに出る圧縮送信サイズではなく元のファイルサイズを書くべし
 	const glbSize = 5659496;
-	
+
 	// アニメーション
 	const nAnim = 1;
 	var animations;
