@@ -150,7 +150,7 @@
 		const dirLight2 = new THREE.DirectionalLight( 0xffffff );
 		dirLight2.position.set( -20, -20, 25 );
 		scene.add( dirLight2 );
-		
+
 		// gltf ファイルの読み込み
 		var loader = new GLTFLoader();
 		loader.load( 'assets/B-1B_00_13.glb', function ( data )
@@ -291,8 +291,7 @@
 
 		// Objects
 		var objectFolder = gui.addFolder( 'Objects' )
-		objectFolder.add( controls, 'Body' ).onChange( setVisible );
-		objectFolder.add( controls, 'GearCover' ).onChange( setVisible );
+		objectFolder.add( controls, 'Body' ).onChange( setBodyVisible );
 		objectFolder.open();
 
 		this.NumberOfObjects = scene.children.length;
@@ -310,17 +309,13 @@
 		} );
 
 		// checkbox が押されたときの obj 更新
-		function setVisible()
+		function setBodyVisible( bVisible )
 		{
-			for ( let i = 0; i < partsArray.length; i++ )
+			for ( let j = 0; j < obj.children.length; j++ )
 			{
-				eval( "bVisible = controls." + partsArray[ i ] + ";" );
-				for ( let j = 0; j < obj.children.length; j++ )
+				if ( obj.children[ j ].name == 'Body' )
 				{
-					if ( obj.children[ j ].name == partsArray[ i ] )
-					{
-						obj.children[ j ].visible = bVisible;
-					}
+					obj.children[ j ].visible = bVisible;
 				}
 			}
 		}

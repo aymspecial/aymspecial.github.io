@@ -42,7 +42,8 @@ class PosTo
 	}
 }
 
-function init()
+//function init()
+var init = () =>
 {
 	scene = new THREE.Scene();
 	clock = new THREE.Clock();
@@ -370,7 +371,7 @@ function render()
 		// スライダー位置を変更する
 		for ( let i = 0; i < nAnim; i++ )
 		{
-			if ( actions[ i ].paused === false ) //&& actions[ i ].paused == false )
+			if ( actions[ i ].paused === false )
 			{
 				sliders[ i ].value = actions[ i ].time * 30;
 			}
@@ -379,7 +380,7 @@ function render()
 }
 
 // 視線ベクトルが上（上空）を向いた場合は地面を消す
-function visibleGround()
+var visibleGround = () =>
 {
 	if ( bGround && camControl.target.y < camera.position.y )
 	{
@@ -394,7 +395,6 @@ function visibleGround()
 		jeepScene.visible = false;
 	}
 }
-
 
 window.onSlider = ( iAnim, val ) =>
 {
