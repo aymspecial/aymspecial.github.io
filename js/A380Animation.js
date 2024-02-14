@@ -49,7 +49,10 @@ var init = () =>
 	clock = new THREE.Clock();
 
 	// create a render, sets the background color and the size
-	renderer = new THREE.WebGLRenderer( { antialias: true } );
+	renderer = new THREE.WebGLRenderer( {
+		antialias: true,
+		precision: 'lowp'
+	} );
 	renderer.setClearColor( 0xeeeeee, 1.0 );
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	renderer.toneMapping = THREE.ACESFilmicToneMapping;
