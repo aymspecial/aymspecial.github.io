@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<script type="text/javascript" src="gamepadtest.js"></script>
+<style>
+.buttons, .axes {
+  padding: 1em;
+}
+
+.button {
+  padding: 1em;
+  border-radius: 20px;
+  border: 1px solid black;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAAXNSR0IArs4c6QAAAAxJREFUCNdjYPjPAAACAgEAqiqeJwAAAABJRU5ErkJggg==);
+  background-size: 0% 0%;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+}
+
+.pressed {
+  border: 1px solid red;
+}
+</style>
+</head>
+<body>
+<h2 id="start" style="display: none;">Press a button on your controller to start</h2>
+
+
+<div id="controller0">
+<div class="buttons">
+<span class="button" style="background-size: 0% 0%;">0</span>
+<span class="button" style="background-size: 0% 0%;">1</span>
+<span class="button" style="background-size: 0% 0%;">2</span>
+<span class="button" style="background-size: 0% 0%;">3</span>
+<span class="button" style="background-size: 0% 0%;">4</span>
+<span class="button" style="background-size: 0% 0%;">5</span>
+<span class="button" style="background-size: 0% 0%;">6</span>
+<span class="button" style="background-size: 0% 0%;">7</span>
+<span class="button" style="background-size: 0% 0%;">8</span>
+<span class="button" style="background-size: 0% 0%;">9</span>
+<span class="button" style="background-size: 0% 0%;">10</span>
+<span class="button" style="background-size: 0% 0%;">11</span>
+<span class="button" style="background-size: 0% 0%;">12</span>
+<span class="button" style="background-size: 0% 0%;">13</span>
+<span class="button" style="background-size: 0% 0%;">14</span>
+<span class="button" style="background-size: 0% 0%;">15</span>
+<span class="button" style="background-size: 0% 0%;">16</span>
+</div>
+<div class="axes">
+<progress class="axis" max="2" value="1.0000152587890625">0: 0.0000</progress>
+<progress class="axis" max="2" value="0.9999847412109375">1: -0.0000</progress>
+<progress class="axis" max="2" value="1.0000152587890625">2: 0.0000</progress>
+<progress class="axis" max="2" value="0.9999847412109375">3: -0.0000</progress>
+</div>
+</div>
+</body></html>
