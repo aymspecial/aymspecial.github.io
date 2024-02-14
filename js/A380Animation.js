@@ -411,6 +411,9 @@ var changeTex = ( nTex ) =>
 		case 3:
 			texImage = "assets/texture/A380-03.png";
 			break;
+		case 4:
+			texImage = "assets/texture/A380-04.png";
+			break;
 	}
 	var object = mainObj.getObjectByName( "Body" ); // find obj by name
 
