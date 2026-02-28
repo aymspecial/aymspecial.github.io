@@ -1,0 +1,80 @@
+<head>
+	<meta charset="utf-8" />
+	<title>Real-Time 3D Graphics with WebGL 2</title>
+
+	<link rel="stylesheet" href="/css/galaxy.css">
+	<meta http-equiv="Permissions-Policy" content="interest-cohort=()">
+</head>
+
+<html>
+<body>
+	<div id="webgl-div">
+		<div id="progressDiv">
+			Loading...<br />
+			<progress id="loadProgress" max="100" value="0"> 0% </progress>
+		</div>
+		<div id="inner">
+			<center>
+				<table>
+					<tr>
+						<td><button type="button" onclick="changeTex( 1 )" style="border:4px solid:#000; background-color:#64c9ff;">&emsp;&emsp;</button></td>
+						<td><button type="button" onclick="changeTex( 2 )" style="border:4px solid:#000; background-color:#00ff21;">&emsp;&emsp;</button></td>
+						<td><button type="button" onclick="changeTex( 3 )" style="border:4px solid:#000; background-color:#ff75ad;">&emsp;&emsp;</button></td>
+						<td><button type="button" onclick="changeTex( 4 )" style="border:4px solid:#000; background-color:#ff0000;">&emsp;&emsp;</button></td>
+					</tr>
+				</table>
+				<table valign="center" width=20%>
+					<tr>
+						<td id="animName00">Animation00</td>
+						<td><img src="image/BackButton.png" width=24 height=24 onclick="onReverse( 0 )" /></td>
+						<td>
+							<input id="slide00" type="range" class='slide' min="0" max="300" step="1" value="0"
+								   oninput="onSlider( 0, this.value )">
+						</td>
+						<td><img src="image/PlayButton.png" width=24 height=24 onclick="onPlay( 0 )" /></td>
+					</tr>
+				</table>
+			</center>
+			<p>  Drag Sliders to Change Frame of Animations</p>
+		</div>
+	</div>
+</body>
+</html>
+<script type="importmap">
+	{
+		"imports": {
+			"three": "/lib/three.js/build/three.module.js",
+			"three/addons/": "/lib/three.js/examples/jsm/"
+		}
+	}
+</script>
+
+<script src="/lib/dat.gui/dat.gui.min.js"></script>
+<script type="module" src="./js/A380Animation.js"></script>
+<script>
+	// ↑ 'type="module" にすると以下の変数は消えちゃう
+	// マジック
+	const mainGlb = 'assets/A-380_01.glb';
+	const mainScale = 1.5;
+	const mainX = 0;
+	const mainY = 0;
+	const mainZ = 0;
+
+	const jeepScale = 0.05;
+	const jeepX = -4;
+	const jeepY = 0;
+	const jeepZ = 16;
+
+	// Github ではファイルサイズレスポンスが取れんかった
+	// ローカルの IIS ではきちんと取れてる。
+	// デバッガに出る圧縮送信サイズではなく元のファイルサイズを書くべし
+	const glbSize = 8634512;
+</script>
+<script type="module">
+	import { changeTex } from './js/A380Animation.js';
+
+	window.changeTex = ( nTex ) =>
+	{
+		changeTex( nTex );
+	}
+</script>
