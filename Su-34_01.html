@@ -172,7 +172,6 @@
 		groundPlane2.position.x = 0;
 		groundPlane2.position.y = 0;
 		groundPlane2.position.z = 0;
-
 		// add the plane to the scene
 		scene.add( groundPlane1 );
 		scene.add( groundPlane2 );
@@ -236,9 +235,11 @@
 		{
 			const gltf = data;
 			obj = gltf.scene;
+			
 			obj.scale.set( 2.0, 2.0, 2.0 );
 			animations = gltf.animations;
 
+			
 			// 影を持つ
 			obj.traverse( function ( child )
 			{
